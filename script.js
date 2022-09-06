@@ -1,10 +1,11 @@
-const input = document.querySelector("#input");
+const input = document.querySelector("#main-input");
 let todosUL = document.querySelector("#todos-ul");
 const add = document.querySelector("#add");
 const todoItem = document.getElementsByClassName("todo-item");
 const editItem = document.querySelectorAll(".edit-item");
 const deleteItem = document.querySelectorAll(".delete-item");
 const saveItem = document.querySelectorAll(".save-item");
+const warning = document.querySelector(".warning");
 let todos = [];
 
 todosUL.addEventListener("click", (e) => {
@@ -12,14 +13,16 @@ todosUL.addEventListener("click", (e) => {
         if (e.target.classList.contains("edit-item")) {
             function editTodo(todos) {
                 //edit todo
-                const editTodoArray = todos.map(item => {
+                todos = todos.map(item => {
                     if (item.id === Number(e.target.id)) {
                         return (
                             `
                                 <li class="todo-item">
-                                    <input value=${item.todoItem} />
-                                    <button id=${item.id} class="save-item">Save</button>
-                                    <button id=${item.id} class="delete-item">Delete</button>
+                                    <input class="edit-input" value="${item.todoItem}" />
+                                    <section>
+                                        <button id=${item.id} class="save-item">Save</button>
+                                        <button id=${item.id} class="delete-item">Delete</button>
+                                    </section>
                                 </li>
                             `
                         )
@@ -27,14 +30,16 @@ todosUL.addEventListener("click", (e) => {
                         return (
                             `
                                 <li class="todo-item">${item.todoItem}
+                                <section>
                                     <button id=${item.id} class="edit-item">Edit</button>
                                     <button id=${item.id} class="delete-item">Delete</button>
+                                </section>
                                 </li>
                             `
                         )
                     }
                 })
-                todosUL.innerHTML = editTodoArray;
+                todosUL.innerHTML = todos.join("");
             }
             editTodo(todos)
         } else if (e.target.classList.contains("delete-item")) {
@@ -51,13 +56,15 @@ todosUL.addEventListener("click", (e) => {
                     return (
                         `
                             <li class="todo-item">${item.todoItem}
-                                <button id=${item.id} class="edit-item">Edit</button>
-                                <button id=${item.id} class="delete-item">Delete</button>
+                                <section>
+                                    <button id=${item.id} class="edit-item">Edit</button>
+                                    <button id=${item.id} class="delete-item">Delete</button>
+                                </section>
                             </li>
                         `
                     )
                 })
-                todosUL.innerHTML = todos
+                todosUL.innerHTML = todos.join("")
             }
             deleteTodo(todos);
 
@@ -81,14 +88,16 @@ todosUL.addEventListener("click", (e) => {
                 todos = todos.map(item => {
                     return (
                             `
-                                <li>${item.todoItem}
-                                    <button id=${item.id} class="edit-item">Edit</button>
-                                    <button id=${item.id} class="delete-item">Delete</button>
+                                <li class="todo-item">${item.todoItem}
+                                    <section>
+                                        <button id=${item.id} class="edit-item">Edit</button>
+                                        <button id=${item.id} class="delete-item">Delete</button>
+                                    </section>
                                 </li>
                             `
                         )
                     })
-                todosUL.innerHTML = todos
+                todosUL.innerHTML = todos.join("")
             }
             saveItem(todos)
         }
@@ -97,37 +106,45 @@ todosUL.addEventListener("click", (e) => {
 
     input.addEventListener("keyup", (e) => {
         if (e.key === "Enter") {
-            const individualTodo = {
-                id: Math.random(),
-                todoItem: e.target.value
+            if (e.target.value.length > 1) {
+                const individualTodo = {
+                    id: Math.random(),
+                    todoItem: e.target.value
+                }
+               
+                function addTodo(todo) {
+                    todos.push(todo)
+                    e.target.value = "";
+                    return todos
+                }
+                addTodo(individualTodo)
+    
+                function renderTodos(todoArray) {
+                    newTodos = todoArray.map(item => {
+                        return (
+                            item
+                        )
+                    })
+                    renderNewTodos = newTodos.map(item => {
+                        return (
+                            `
+                                <li class="todo-item">${item.todoItem}
+                                    <section>
+                                        <button id=${item.id} class="edit-item">Edit</button>
+                                        <button id=${item.id} class="delete-item">Delete</button>
+                                    </section>
+                                </li>
+                            `
+                        )
+                    })
+                    todosUL.innerHTML = renderNewTodos.join("")
+                }
+                renderTodos(todos)
+            } else {
+                warning.style.display = "block";
+                setTimeout(function emptyReminder() {
+                    warning.style.display = "none";
+                }, 2000)
             }
-           
-            function addTodo(todo) {
-                todos.push(todo)
-                e.target.value = "";
-                return todos
-            }
-            addTodo(individualTodo)
-
-            function renderTodos(todoArray) {
-                newTodos = todoArray.map(item => {
-                    return (
-                        item
-                    )
-                })
-                renderNewTodos = newTodos.map(item => {
-                    return (
-                        `
-                            <li class="todo-item">${item.todoItem}
-                                <button id=${item.id} class="edit-item">Edit</button>
-                                <button id=${item.id} class="delete-item">Delete</button>
-                            </li>
-                        `
-                    )
-                })
-                todosUL.innerHTML = renderNewTodos
-            }
-            renderTodos(todos)
-
         }
     })
