@@ -112,7 +112,6 @@ todosUL.addEventListener("click", (e) => {
                 todos[i].isDone = !todos[i].isDone
             }
             e.target.classList.toggle("done")
-            console.log(todos)
             return todos
         }
         markDone(todos)
