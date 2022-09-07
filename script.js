@@ -14,6 +14,7 @@ todosUL.addEventListener("click", (e) => {
             function editTodo(todos) {
                 //edit todo
                 todos = todos.map(item => {
+                    console.log("edit todos", todos)
                     if (item.id === Number(e.target.id)) {
                         return (
                             `
@@ -29,7 +30,7 @@ todosUL.addEventListener("click", (e) => {
                     } else {
                         return (
                             `
-                                <li class="todo-item">${item.todoItem}
+                                <li class="todo-item ${item.isDone && "done"}">${item.todoItem}
                                 <section>
                                     <button id=${item.id} class="edit-item">Edit</button>
                                     <button id=${item.id} class="delete-item">Delete</button>
@@ -55,7 +56,7 @@ todosUL.addEventListener("click", (e) => {
                 .map(item => {
                     return (
                         `
-                            <li class="todo-item">${item.todoItem}
+                            <li class="todo-item ${item.isDone && "done"}">${item.todoItem}
                                 <section>
                                     <button id=${item.id} class="edit-item">Edit</button>
                                     <button id=${item.id} class="delete-item">Delete</button>
@@ -88,7 +89,7 @@ todosUL.addEventListener("click", (e) => {
                 todos = todos.map(item => {
                     return (
                             `
-                                <li class="todo-item">${item.todoItem}
+                                <li class="todo-item ${item.isDone && "done"}">${item.todoItem}
                                     <section>
                                         <button id=${item.id} class="edit-item">Edit</button>
                                         <button id=${item.id} class="delete-item">Delete</button>
@@ -102,6 +103,20 @@ todosUL.addEventListener("click", (e) => {
             saveItem(todos)
         }
     }
+
+    
+    if (e.target.tagName === "LI") {
+        function markDone(todos) {
+            for (let i = 0; i < todos.length; i++) {
+                if (todos[i].todoItem === e.target.firstChild.textContent.trimEnd())
+                todos[i].isDone = !todos[i].isDone
+            }
+            e.target.classList.toggle("done")
+            console.log(todos)
+            return todos
+        }
+        markDone(todos)
+    }
 })
 
     input.addEventListener("keyup", (e) => {
@@ -109,7 +124,8 @@ todosUL.addEventListener("click", (e) => {
             if (e.target.value.length > 1) {
                 const individualTodo = {
                     id: Math.random(),
-                    todoItem: e.target.value
+                    todoItem: e.target.value,
+                    isDone: false
                 }
                
                 function addTodo(todo) {
@@ -128,7 +144,7 @@ todosUL.addEventListener("click", (e) => {
                     renderNewTodos = newTodos.map(item => {
                         return (
                             `
-                                <li class="todo-item">${item.todoItem}
+                                <li id=${item.id} class="todo-item">${item.todoItem}
                                     <section>
                                         <button id=${item.id} class="edit-item">Edit</button>
                                         <button id=${item.id} class="delete-item">Delete</button>

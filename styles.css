@@ -93,3 +93,9 @@ p {
     margin: 0;
     padding: 0;
 }
+
+.done {
+    color: gray;
+    text-decoration: line-through;
+    font-style: italic;
+}
